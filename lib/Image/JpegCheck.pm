@@ -20,24 +20,28 @@ sub is_jpeg {
     }
 }
 
+use constant {
+    SIZE_FIRST     => 0xC0,         # Range of segment identifier codes
+    SIZE_LAST      => 0xC3,         #  that hold size info.
+    SECTION_MARKER => "\xFF",
+    MAGICK         => "\xFF\xD8",
+};
+
 sub _is_jpeg {
     my $fh = $_[0];
     my ($buf, $code, $marker, $len);
 
     read($fh, $buf, 2);
-    return 0 if $buf ne "\xFF\xD8";
-
-    my $SIZE_FIRST  = 0xC0;         # Range of segment identifier codes
-    my $SIZE_LAST   = 0xC3;         #  that hold size info.
+    return 0 if $buf ne MAGICK;
 
     while (1) {
         read($fh, $buf, 4);
         ($marker, $code, $len) = unpack("a a n", $buf); # read segment header
         $code = ord($code);
 
-        if ($marker ne "\xFF") {
+        if ($marker ne SECTION_MARKER) {
             return 0; # invalid marker
-        } elsif (($code >= $SIZE_FIRST) && ($code <= $SIZE_LAST)) {
+        } elsif (($code >= SIZE_FIRST) && ($code <= SIZE_LAST)) {
             return 1; # got a size info
         } else {
             seek $fh, $len-2, SEEK_CUR; # skip segment body
