@@ -55,7 +55,7 @@ __END__
 
 =head1 NAME
 
-Image::JpegCheck -
+Image::JpegCheck - check jpeg file
 
 =head1 SYNOPSIS
 
