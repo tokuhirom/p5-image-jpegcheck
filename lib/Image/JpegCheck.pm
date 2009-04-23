@@ -1,19 +1,11 @@
 package Image::JpegCheck;
 use strict;
 use warnings;
+use bytes;
+use Fcntl ':seek';
 our $VERSION = '0.01';
 our @ISA = qw/Exporter/;
 our @EXPORT = ('is_jpeg');
-
-eval {
-    require XSLoader;
-    XSLoader::load(__PACKAGE__, $VERSION);
-    1;
-} or do {
-    require DynaLoader;
-    push @ISA, 'DynaLoader';
-    __PACKAGE__->bootstrap($VERSION);
-};
 
 sub is_jpeg {
     my ($file, ) = @_;
@@ -21,10 +13,37 @@ sub is_jpeg {
         return Image::JpegCheck::_is_jpeg($file);
     } else {
         open my $fh, '<', $file or die $!;
+        binmode $fh;
         my $ret = Image::JpegCheck::_is_jpeg($fh);
         close $fh;
         return $ret;
     }
+}
+
+sub _is_jpeg {
+    my $fh = $_[0];
+    my ($buf, $code, $marker, $len);
+
+    read($fh, $buf, 2);
+    return 0 if $buf ne "\xFF\xD8";
+
+    my $SIZE_FIRST  = 0xC0;         # Range of segment identifier codes
+    my $SIZE_LAST   = 0xC3;         #  that hold size info.
+
+    while (1) {
+        read($fh, $buf, 4);
+        ($marker, $code, $len) = unpack("a a n", $buf); # read segment header
+        $code = ord($code);
+
+        if ($marker ne "\xFF") {
+            return 0; # invalid marker
+        } elsif (($code >= $SIZE_FIRST) && ($code <= $SIZE_LAST)) {
+            return 1; # got a size info
+        } else {
+            seek $fh, $len-2, SEEK_CUR; # skip segment body
+        }
+    }
+    die "should not reach here";
 }
 
 1;
