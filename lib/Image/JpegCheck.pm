@@ -55,7 +55,7 @@ __END__
 
 =head1 NAME
 
-Image::JpegCheck - check jpeg file
+Image::JpegCheck - is this jpeg?
 
 =head1 SYNOPSIS
 
@@ -64,13 +64,20 @@ Image::JpegCheck - check jpeg file
 
 =head1 DESCRIPTION
 
-Image::JpegCheck is
+Image::JpegCheck is jpeg file checker for perl.
+
+Yes, I know. I know the L<Imager>, L<GD>, L<Image::Magick>, L<Image::Size>,
+etc.But, I need tiny one. I want to use this module in the mod_perl =)
+
+Code is taken from L<Image::Size>, and optimized it.
 
 =head1 AUTHOR
 
 Tokuhiro Matsuno E<lt>tokuhirom ah! gmail.comE<gt>
 
 =head1 SEE ALSO
+
+L<Image::Size>
 
 =head1 LICENSE
 
