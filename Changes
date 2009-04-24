@@ -1,5 +1,9 @@
 Revision history for Perl extension Image::JpegCheck
 
+0.03
+
+        - brush up xs code
+
 0.02
 
         - added xs version. xs version is 150% faster.
