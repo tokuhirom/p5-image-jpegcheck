@@ -1,5 +1,10 @@
 Revision history for Perl extension Image::JpegCheck
 
+0.04
+
+        - remove xs(pp is fast enough)
+        - fixed bug for some jpeg file(patch by kazeburo++)
+
 0.03
 
         - brush up xs code
