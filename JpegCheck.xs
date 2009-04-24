@@ -13,19 +13,19 @@ MODULE = Image::JpegCheck   PACKAGE = Image::JpegCheck
 PROTOTYPES: DISABLE
 
 void
-_is_jpeg(FILE * fp)
+_is_jpeg(PerlIO * fp)
 PREINIT:
     unsigned char buf[4];
     long len;
 PPCODE:
     /* jpeg magick */
-    if (fgetc(fp) != 0xFF || fgetc(fp) != 0xD8) {
+    if (PerlIO_getc(fp) != 0xFF || PerlIO_getc(fp) != 0xD8) {
         RET(0);
     }
 
     /* validate segments */
     while (1) {
-        if (fread(buf, 1, 4, fp) != 4) {
+        if (PerlIO_read(fp, buf, 4) != 4) {
             RET(0);
         }
 
@@ -38,7 +38,7 @@ PPCODE:
 
         /* skip segment body */
         len = (buf[2]<<8) | buf[3]; /* network byte order */
-        if (fseek(fp, len-2, SEEK_CUR) != 0) {
+        if (PerlIO_seek(fp, len-2, SEEK_CUR) != 0) {
             RET(0);
         }
     }
