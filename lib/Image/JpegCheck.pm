@@ -14,6 +14,9 @@ sub is_jpeg {
     if (ref $file) {
         if (ref $file eq 'GLOB') {
             return Image::JpegCheck::_is_jpeg($file);
+        } elsif (ref $file eq 'SCALAR') {
+            open my $fh, '<', $file or die $!;
+            return Image::JpegCheck::_is_jpeg($fh);
         } elsif (ref $file eq 'Path::Class::File') {
             return Image::JpegCheck::_is_jpeg($file->openr);
         } else {
