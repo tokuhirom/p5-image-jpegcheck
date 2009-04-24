@@ -4,7 +4,7 @@ use warnings;
 use 5.008001;
 use bytes;
 use Fcntl ':seek';
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 our @ISA = qw/Exporter/;
 our @EXPORT = ('is_jpeg');
 use XSLoader;

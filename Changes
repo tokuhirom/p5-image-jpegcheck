@@ -1,4 +1,8 @@
 Revision history for Perl extension Image::JpegCheck
 
+0.02
+
+        - added xs version. xs version is 150% faster.
+
 0.01    Thu Apr 23 17:00:44 2009
         - original version
