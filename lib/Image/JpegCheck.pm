@@ -7,8 +7,6 @@ use Fcntl ':seek';
 our $VERSION = '0.03';
 our @ISA = qw/Exporter/;
 our @EXPORT = ('is_jpeg');
-use XSLoader;
-eval q{ XSLoader::load('Image::JpegCheck', $VERSION) } unless $ENV{JPEGCHECK_NOXS}; ## no critic
 
 sub is_jpeg {
     my ($file, ) = @_;
@@ -38,8 +36,15 @@ sub _is_jpeg {
     return 0 if $buf ne MAGICK;
 
     while (1) {
-        read($fh, $buf, 4);
-        ($marker, $code, $len) = unpack("a a n", $buf); # read segment header
+        read($fh, $buf, 2);
+        ($marker, $code) = unpack("a a", $buf); # read segment header
+
+        while ( $code eq SECTION_MARKER && ($marker = $code) ) {
+            read($fh, $buf, 1);
+           ($code) = unpack("a", $buf);
+       }
+       read($fh, $buf, 2);
+       $len = unpack( "n", $buf );
         $code = ord($code);
 
         if ($marker ne SECTION_MARKER) {
