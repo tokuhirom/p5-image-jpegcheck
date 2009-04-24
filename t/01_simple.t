@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 6;
 use Image::JpegCheck;
 
 ok is_jpeg('t/foo.jpg');
@@ -8,6 +8,12 @@ ok is_jpeg('t/bar.jpg');
 ok ! is_jpeg('t/01_simple.t');
 test_fh('t/foo.jpg', 1);
 test_fh('t/01_simple.t', 0);
+
+{
+    local $@;
+    eval { is_jpeg([]) };
+    like $@, qr/is_jpeg requires file-glob or filename/;
+}
 
 sub test_fh {
     my ($fname, $expected) = @_;
