@@ -89,6 +89,21 @@ etc.But, I need tiny one. I want to use this module in the mod_perl =)
 
 Code is taken from L<Image::Size>, and optimized it.
 
+=head1 FUNCTIONS
+
+=over 4
+
+=item is_jpeg($stuff)
+
+is_jpeg($stuff) validates your jpeg.stuff is:
+
+    scalar:            filename
+    scalarref:         jpeg itself
+    file-glob:         file handle
+    Path::Class::File: file object
+
+=back
+
 =head1 AUTHOR
 
 Tokuhiro Matsuno E<lt>tokuhirom ah! gmail.comE<gt>
