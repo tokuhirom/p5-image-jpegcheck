@@ -6,7 +6,7 @@
 #define SIZE_FIRST  0xC0
 #define SIZE_LAST   0xC3
 
-#define RET(n) XSRETURN_IV((n));goto end
+#define RET(n) XSRETURN_IV((n))
 
 MODULE = Image::JpegCheck   PACKAGE = Image::JpegCheck
 
@@ -42,5 +42,4 @@ PPCODE:
             RET(0);
         }
     }
-    end:
 
