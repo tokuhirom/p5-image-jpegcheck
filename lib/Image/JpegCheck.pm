@@ -14,6 +14,8 @@ sub is_jpeg {
     if (ref $file) {
         if (ref $file eq 'GLOB') {
             return Image::JpegCheck::_is_jpeg($file);
+        } elsif (ref $file eq 'Path::Class::File') {
+            return Image::JpegCheck::_is_jpeg($file->openr);
         } else {
             Carp::croak('is_jpeg requires file-glob or filename');
         }
