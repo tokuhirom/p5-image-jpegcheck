@@ -1,11 +1,14 @@
 package Image::JpegCheck;
 use strict;
 use warnings;
+use 5.008001;
 use bytes;
 use Fcntl ':seek';
 our $VERSION = '0.01';
 our @ISA = qw/Exporter/;
 our @EXPORT = ('is_jpeg');
+use XSLoader;
+eval q{ XSLoader::load('Image::JpegCheck', $VERSION) } unless $ENV{JPEGCHECK_NOXS}; ## no critic
 
 sub is_jpeg {
     my ($file, ) = @_;
