@@ -20,26 +20,26 @@ PREINIT:
 PPCODE:
     /* jpeg magick */
     if (PerlIO_getc(fp) != 0xFF || PerlIO_getc(fp) != 0xD8) {
-        RET(0);
+        XSRETURN_NO;
     }
 
     /* validate segments */
     while (1) {
         if (PerlIO_read(fp, buf, 4) != 4) {
-            RET(0);
+            XSRETURN_NO;
         }
 
         if (buf[0] != 0xFF) {
-            RET(0); /* invalid marker */
+            XSRETURN_NO; /* invalid marker */
         }
         if ((buf[1] >= SIZE_FIRST) && (buf[1] <= SIZE_LAST)) {
-            RET(1);
+            XSRETURN_YES;
         }
 
         /* skip segment body */
         len = (buf[2]<<8) | buf[3]; /* network byte order */
         if (PerlIO_seek(fp, len-2, SEEK_CUR) != 0) {
-            RET(0);
+            XSRETURN_NO;
         }
     }
 
