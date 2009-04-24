@@ -83,6 +83,10 @@ Code is taken from L<Image::Size>, and optimized it.
 
 Tokuhiro Matsuno E<lt>tokuhirom ah! gmail.comE<gt>
 
+=head1 THANKS TO
+
+kazeburo++
+
 =head1 SEE ALSO
 
 L<Image::Size>
