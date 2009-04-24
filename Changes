@@ -1,5 +1,11 @@
 Revision history for Perl extension Image::JpegCheck
 
+0.05
+
+        - added scalarref support
+        - added Path::Class::File support
+        - added validation code(yappo++)
+
 0.04
 
         - remove xs(pp is fast enough)
