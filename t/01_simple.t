@@ -1,27 +1,24 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 9;
 use Image::JpegCheck;
 
-ok is_jpeg('t/foo.jpg');
-ok is_jpeg('t/bar.jpg');
-ok ! is_jpeg('t/01_simple.t');
-test_fh('t/foo.jpg', 1);
-test_fh('t/01_simple.t', 0);
-test_scalarref('t/foo.jpg', 1);
-test_scalarref('t/01_simple.t', 0);
+test_whole('t/foo.jpg',     1);
+test_whole('t/bar.jpg',     1);
+test_whole('t/01_simple.t', 0);
 
-{
-    local $@;
-    eval { is_jpeg([]) };
-    like $@, qr/is_jpeg requires file-glob or filename/;
+sub test_whole {
+    my ($src, $expected) = @_;
+    test($src, $expected);
+    test_fh($src, $expected);
+    test_scalarref($src, $expected);
 }
 
 sub test_fh {
     my ($fname, $expected) = @_;
 
     open my $fh, '<', $fname or die;
-    is((is_jpeg($fh) ? 1 : 0), $expected);
+    test($fh, $expected);
     close $fh;
 }
 
@@ -32,6 +29,11 @@ sub test_scalarref {
     my $src = do { local $/; <$fh> };
     close $fh;
 
-    is((is_jpeg(\$src) ? 1 : 0), $expected);
+    test(\$src, $expected);
+}
+
+sub test {
+    my ($src, $expected) = @_;
+    is((is_jpeg($src) ? 1 : 0), $expected);
 }
 
