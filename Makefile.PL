@@ -6,6 +6,6 @@ tests 't/*.t';
 author_tests 'xt';
 
 auto_set_repository;
-build_requires 'Test::More';
+test_requires 'Test::More' => 0.92;
 auto_include;
 WriteAll;

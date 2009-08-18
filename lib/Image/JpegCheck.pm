@@ -35,7 +35,8 @@ use constant {
     SIZE_FIRST     => 0xC0,         # Range of segment identifier codes
     SIZE_LAST      => 0xC3,         #  that hold size info.
     SECTION_MARKER => "\xFF",
-    MAGICK         => "\xFF\xD8",
+    SOI            => "\xFF\xD8",
+    EOI            => "\xFF\xD9",
 };
 
 sub _is_jpeg {
@@ -43,7 +44,7 @@ sub _is_jpeg {
     my ($buf, $code, $marker, $len);
 
     read($fh, $buf, 2);
-    return 0 if $buf ne MAGICK;
+    return 0 if $buf ne SOI;
 
     while (1) {
         read($fh, $buf, 2);
@@ -60,12 +61,20 @@ sub _is_jpeg {
         if ($marker ne SECTION_MARKER) {
             return 0; # invalid marker
         } elsif (($code >= SIZE_FIRST) && ($code <= SIZE_LAST)) {
-            return 1; # got a size info
+            return _check_eoi($fh); # got a size info
         } else {
             seek $fh, $len-2, SEEK_CUR; # skip segment body
         }
     }
     die "should not reach here";
+}
+
+sub _check_eoi {
+    my $fh = shift;
+    return 0 if seek($fh, -2, SEEK_END) == 0;
+    return 0 if read($fh, my $buf, 2)   != 2;
+    return 0 if $buf ne EOI;
+    return 1; # success!
 }
 
 1;
