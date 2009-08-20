@@ -1,5 +1,9 @@
 Revision history for Perl extension Image::JpegCheck
 
+0.07
+
+        - I failed cpan upload.re-release.
+
 0.06
 
         - validate EOI for truncated jpeg file(hirose31++)
