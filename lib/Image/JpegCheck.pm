@@ -37,7 +37,7 @@ use constant {
     SECTION_MARKER => "\xFF",
     SOI            => "\xFF\xD8",
     EOI            => "\xFF\xD9",
-    EOI_RE         => qr/\xFF\xD9\xFF+$/,
+    EOI_RE         => qr/\xFF\xD9\xFF*$/,
     READ_SIZE      => 512,
     BYTE_STUFFING  => "\xFF"x512,
 };
@@ -84,15 +84,16 @@ sub _skip_stuffing {
     my $fh = shift;
     my $seek = READ_SIZE;
     my $size = tell($fh);
+    my $buf = '';
+    my $len;
 
-    while (1) {
+    while ($seek <= $size) {
         return 0 if seek($fh, -$seek, SEEK_END) == 0;
-        return 0 if read($fh, my $buf, READ_SIZE)   != READ_SIZE;
+        return 0 if ($len = read($fh, my $rbuf, READ_SIZE)) < 0;
+        $buf = $rbuf . $buf;
+        $buf =~ s/\xff$//;
         return 1 if $buf =~ EOI_RE;
-        return 0 if $buf ne BYTE_STUFFING;
-        return 0 if $size == $seek;
-        $seek += READ_SIZE;
-        $seek = $size if $seek > $size;
+        $seek += $len;
     }
 }
 
