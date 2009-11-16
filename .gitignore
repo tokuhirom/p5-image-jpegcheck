@@ -1,2 +1,5 @@
 JpegCheck.c
 MANIFEST
+Makefile
+*.old
+inc/
