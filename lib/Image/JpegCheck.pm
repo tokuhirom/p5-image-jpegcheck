@@ -37,6 +37,9 @@ use constant {
     SECTION_MARKER => "\xFF",
     SOI            => "\xFF\xD8",
     EOI            => "\xFF\xD9",
+    EOI_RE         => qr/\xFF\xD9\xFF+$/,
+    READ_SIZE      => 512,
+    BYTE_STUFFING  => "\xFF"x512,
 };
 
 sub _is_jpeg {
@@ -73,8 +76,24 @@ sub _check_eoi {
     my $fh = shift;
     return 0 if seek($fh, -2, SEEK_END) == 0;
     return 0 if read($fh, my $buf, 2)   != 2;
-    return 0 if $buf ne EOI;
+    return _skip_stuffing($fh) if $buf ne EOI;
     return 1; # success!
+}
+
+sub _skip_stuffing {
+    my $fh = shift;
+    my $seek = READ_SIZE;
+    my $size = tell($fh);
+
+    while (1) {
+        return 0 if seek($fh, -$seek, SEEK_END) == 0;
+        return 0 if read($fh, my $buf, READ_SIZE)   != READ_SIZE;
+        return 1 if $buf =~ EOI_RE;
+        return 0 if $buf ne BYTE_STUFFING;
+        return 0 if $size == $seek;
+        $seek += READ_SIZE;
+        $seek = $size if $seek > $size;
+    }
 }
 
 1;

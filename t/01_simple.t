@@ -6,10 +6,11 @@ use Image::JpegCheck;
 our $target;
 
 my @tests = (
-    't/foo.jpg'     => 1,
-    't/bar.jpg'     => 1,
-    't/broken.jpg'  => 0,
-    't/01_simple.t' => 0,
+    't/foo.jpg'      => 1,
+    't/bar.jpg'      => 1,
+    't/stuffing.jpg' => 1,
+    't/broken.jpg'   => 0,
+    't/01_simple.t'  => 0,
 );
 while (my ($src, $expected) = splice(@tests, 0, 2)) {
     test_whole($src, $expected);
