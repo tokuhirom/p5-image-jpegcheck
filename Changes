@@ -1,5 +1,10 @@
 Revision history for Perl extension Image::JpegCheck
 
+0.08
+
+        - support stuffing byte
+          (yappo++)
+
 0.07
 
         - I failed cpan upload.re-release.
