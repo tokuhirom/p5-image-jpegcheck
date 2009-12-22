@@ -64,37 +64,12 @@ sub _is_jpeg {
         if ($marker ne SECTION_MARKER) {
             return 0; # invalid marker
         } elsif (($code >= SIZE_FIRST) && ($code <= SIZE_LAST)) {
-            return _check_eoi($fh); # got a size info
+            return 1; # got a size info
         } else {
             seek $fh, $len-2, SEEK_CUR; # skip segment body
         }
     }
     die "should not reach here";
-}
-
-sub _check_eoi {
-    my $fh = shift;
-    return 0 if seek($fh, -2, SEEK_END) == 0;
-    return 0 if read($fh, my $buf, 2)   != 2;
-    return _skip_stuffing($fh) if $buf ne EOI;
-    return 1; # success!
-}
-
-sub _skip_stuffing {
-    my $fh = shift;
-    my $seek = READ_SIZE;
-    my $size = tell($fh);
-    my $buf = '';
-    my $len;
-
-    while ($seek <= $size) {
-        return 0 if seek($fh, -$seek, SEEK_END) == 0;
-        return 0 if ($len = read($fh, my $rbuf, READ_SIZE)) < 0;
-        $buf = $rbuf . $buf;
-        $buf =~ s/\xff$//;
-        return 1 if $buf =~ EOI_RE;
-        $seek += $len;
-    }
 }
 
 1;
