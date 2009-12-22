@@ -1,5 +1,10 @@
 Revision history for Perl extension Image::JpegCheck
 
+0.09
+
+        - 0.08's change is not compat for Ricoh GRX.
+          Ricoh GRX inject some random bytes in stuffing byte.
+
 0.08
 
         - support stuffing byte

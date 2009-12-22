@@ -5,7 +5,7 @@ use 5.008001;
 use bytes;
 use Fcntl ':seek';
 use Carp ();
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 our @ISA = qw/Exporter/;
 our @EXPORT = ('is_jpeg');
 
