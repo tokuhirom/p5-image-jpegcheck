@@ -5,3 +5,4 @@ Makefile
 inc/
 *.swp
 *.swo
+*.bak
